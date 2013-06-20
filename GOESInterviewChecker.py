@@ -5,6 +5,7 @@ from selenium.common.exceptions import NoSuchElementException
 import unittest, time, re
 import smtplib
 from email.mime.text import MIMEText
+from subprocess import *
 
 #####
 # Author: Mike Adler - May 3, 2013
@@ -59,12 +60,15 @@ class GOESInterviewChecker(unittest.TestCase):
 	
 	# Email Info
 	# Set these values
-	SENDER = "" #sender email address - and login email for smtp server
+	SENDER = None #sender email address - and login email for smtp server
 	EMAIL_PASSWORD = "" #password for smtp server
 	TO =  "" #email address to send the notifications
 	SUBJECT = "GOES - Earlier Interview Found!" #subject of the email notification
 	SMTP_SERVER = "" #smtp server address to use for email sending
 	SMTP_PORT = 0 #smtp server port number
+
+	# Notification cmd - change to something useful
+	NOTIFY_CMD=None
 	
 	# Optionally set this value
 	# Note: If set to None, comparison will use current booking date
@@ -183,25 +187,31 @@ class GOESInterviewChecker(unittest.TestCase):
 		return containsEarlierDate
 		
 	def sendEmail(self, message):
-		# Create a text/plain message
-		msg = MIMEText(message)
+		if self.NOTIFY_CMD:
+			process = Popen(self.NOTIFY_CMD, stdin=PIPE, stdout=None, stderr=None, shell=True)
+			process.stdin.write(message)
+			process.communicate()
 
-		msg['Subject'] = self.SUBJECT
-		msg['From'] = self.SENDER
-		msg['To'] = self.TO
+		if self.SENDER:
+			# Create a text/plain message
+			msg = MIMEText(message)
 
-		# Send the message via provided server
-		session = smtplib.SMTP(self.SMTP_SERVER, self.SMTP_PORT)
-		
-		# Login to the smtp server
-		session.ehlo()
-		session.starttls()
-		session.ehlo
-		session.login(self.SENDER, self.EMAIL_PASSWORD)
-		
-		session.sendmail(self.SENDER, [self.TO], msg.as_string())
-		session.quit()
-		
+			msg['Subject'] = self.SUBJECT
+			msg['From'] = self.SENDER
+			msg['To'] = self.TO
+
+			# Send the message via provided server
+			session = smtplib.SMTP(self.SMTP_SERVER, self.SMTP_PORT)
+
+			# Login to the smtp server
+			session.ehlo()
+			session.starttls()
+			session.ehlo
+			session.login(self.SENDER, self.EMAIL_PASSWORD)
+
+			session.sendmail(self.SENDER, [self.TO], msg.as_string())
+			session.quit()
+
 	#######
 	# Selenium Functions - DO NOT MODIFY
 	######
