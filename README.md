@@ -17,5 +17,5 @@ pip install -U selenium
 
 In order to use on a headless machine, use xvfb:
 ```bash
-	xvfb-run python GOESInterviewChecker.py
+xvfb-run python GOESInterviewChecker.py
 ```
