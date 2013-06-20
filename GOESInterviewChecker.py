@@ -122,7 +122,7 @@ class GOESInterviewChecker(unittest.TestCase):
 		dateStr = dateStr.replace("Interview Time:", "")
 		dateStr = dateStr.strip()
 		
-		currentDate = time.strptime(dateStr, "%B %d, %Y %H:%M")
+		currentDate = time.strptime(dateStr, "%b %d, %Y %H:%M")
 		
 		return currentDate
 		
