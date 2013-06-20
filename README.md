@@ -9,9 +9,13 @@ Once installed, simply set the required GOES login and email information in the 
 ## Broken selenium
 
 There is an issue with some versions of Selenium/Ubuntu where firefox will not be able to start. In this case, try installing the latest version using
-	# pip install -U selenium
+```bash
+pip install -U selenium
+```
 
 ## Headless machine
 
 In order to use on a headless machine, use xvfb:
-	$ xvfb-run python GOESInterviewChecker.py
+```bash
+	xvfb-run python GOESInterviewChecker.py
+```
